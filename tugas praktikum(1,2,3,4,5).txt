@@ -1,0 +1,41 @@
+1.Select count(distinct tabel_mahasiswa.Nim) 
+as mahasiswa_yang_mengambil_matkul 
+from tabel_mahasiswa INNER JOIN tabel_ambil_mk 
+ON tabel_mahasiswa.Nim = tabel_ambil_mk.Nim;
+
+//eksplisit
+Select count(distinct tabel_mahasiswa.Nim) 
+as mahasiswa_yang_mengambil_matkul 
+from tabel_mahasiswa INNER JOIN tabel_ambil_mk 
+ON tabel_mahasiswa.Nim = tabel_ambil_mk.Nim;
+//implisit
+Select count(distinct tabel_mahasiswa.Nim) 
+as mahasiswa_yang_mengambil_matkul 
+from tabel_mahasiswa, tabel_ambil_mk 
+WHERE tabel_mahasiswa.Nim = tabel_ambil_mk.Nim;
+
+2.SELECT tabel_mahasiswa.jenis_kelamin, COUNT(tabel_mahasiswa.jenis_kelamin) AS jumlah 
+FROM tabel_mahasiswa LEFT OUTER JOIN tabel_ambil_mk ON tabel_mahasiswa.nim = tabel_ambil_mk.nim 
+WHERE tabel_ambil_mk.nim IS NULL
+GROUP BY tabel_mahasiswa.jenis_kelamin;
+
+3.//implisit
+SELECT tabel_mahasiswa.nim, tabel_mahasiswa.nama, tabel_matakuliah.kode_mk, tabel_matakuliah.nama_mk
+FROM tabel_mahasiswa, tabel_matakuliah, tabel_ambil_mk
+WHERE tabel_mahasiswa.nim = tabel_ambil_mk.nim AND tabel_ambil_mk.kode_mk = tabel_matakuliah.kode_mk;
+//eksplisit
+SELECT tabel_mahasiswa.nim, tabel_mahasiswa.nama, tabel_matakuliah.kode_mk, tabel_matakuliah.nama_mk
+FROM tabel_mahasiswa INNER JOIN tabel_ambil_mk
+ON tabel_mahasiswa.nim = tabel_ambil_mk.nim INNER JOIN tabel_matakuliah ON tabel_ambil_mk.kode_mk = tabel_matakuliah.kode_mk;
+
+4.SELECT tabel_mahasiswa.Nim, Nama, SUM(sks) AS jumlah_sks FROM tabel_mahasiswa 
+INNER JOIN (tabel_matakuliah INNER JOIN tabel_ambil_mk 
+ON tabel_matakuliah.kode_mk = tabel_ambil_mk.kode_mk) 
+ON tabel_mahasiswa.Nim = tabel_ambil_mk.Nim 
+GROUP BY Nama HAVING SUM(sks)>4 AND SUM(sks)<10
+
+5.SELECT tabel_matakuliah.kode_mk, nama_mk, sks, semester FROM tabel_matakuliah 
+LEFT OUTER JOIN (tabel_mahasiswa LEFT OUTER JOIN tabel_ambil_mk 
+ON tabel_mahasiswa.Nim = tabel_ambil_mk.Nim) 
+ON tabel_matakuliah.kode_mk = tabel_ambil_mk.kode_mk 
+WHERE tabel_mahasiswa.Nim IS NULL
